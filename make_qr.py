@@ -16,6 +16,9 @@ Two modes:
 
 Add any extra details (phone, email, GSTIN, ...) as new lines in
 business.json - they are picked up automatically in both modes.
+
+The page uses the Mamees app theme. logo.jpg and favicon.png in this folder
+are shown on the page if present.
 """
 
 import argparse
@@ -97,40 +100,60 @@ def make_qr(data, out_path):
 
 def write_html(details, out_path):
     details = dict(details)
-    title = html.escape(str(details.pop("Business Name", "Business Details")))
+    name = html.escape(str(details.pop("Business Name", "Business Details")))
     maps_url = map_link(details)
     fields = "\n".join(
         f'    <div class="field"><div class="label">{html.escape(k)}</div>{html_value(k, v, maps_url)}</div>'
         for k, v in details.items()
     )
+    # logo.jpg / favicon.png next to index.html are used if present
+    folder = out_path.parent
+    header = (f'<img class="logo" src="logo.jpg" alt="{name}">' if (folder / "logo.jpg").exists()
+              else f'<h1>{name}</h1>')
+    favicon = ('\n  <link rel="icon" type="image/png" href="favicon.png">'
+               if (folder / "favicon.png").exists() else "")
     out_path.write_text(f"""<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{title}</title>
+  <meta name="theme-color" content="#6D060A">
+  <title>{name}</title>{favicon}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
+    /* Mamees brand theme (same as the Mamees app): maroon, cream, gold */
+    :root {{
+      --primary: #6D060A; --primary-h: #8A0A0F; --primary-rgb: 109, 6, 10;
+      --accent: #E4B05B; --bg: #FFFBF2; --logo-bg: #F6DFB6; --surface: #FFFFFF;
+      --border: #F0DDBE; --text: #1A0604; --muted: #8C6255;
+    }}
     * {{ box-sizing: border-box; }}
-    body {{ font-family: system-ui, -apple-system, "Segoe UI", sans-serif; background: #f3f4f1; margin: 0; padding: 24px 16px; color: #1f2420; line-height: 1.45; }}
-    .card {{ max-width: 460px; margin: auto; background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,.08); }}
-    header {{ background: #1e6b3a; color: #fff; padding: 22px 20px; }}
-    h1 {{ font-size: 1.35rem; margin: 0; }}
+    body {{ font-family: "Outfit", system-ui, sans-serif; background: var(--bg); margin: 0; padding: 20px 16px 32px; color: var(--text); line-height: 1.45; -webkit-font-smoothing: antialiased; }}
+    .card {{ max-width: 460px; margin: auto; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden;
+             box-shadow: 0 1px 4px rgba(var(--primary-rgb),.06), 0 4px 16px rgba(var(--primary-rgb),.06); }}
+    header {{ background: var(--logo-bg); text-align: center; }}
+    .logo {{ display: block; width: 100%; height: auto; }}
+    h1 {{ font-family: "Cormorant Garamond", Georgia, serif; font-size: 2rem; color: var(--primary); margin: 0; padding: 24px 20px; }}
+    .gold-line {{ height: 2px; background: linear-gradient(90deg, transparent, var(--accent), transparent); }}
     .fields {{ padding: 4px 20px 12px; }}
-    .field {{ padding: 14px 0; border-top: 1px solid #eceee9; }}
+    .field {{ padding: 14px 0; border-top: 1px solid var(--border); }}
     .field:first-child {{ border-top: 0; }}
-    .label {{ font-size: .75rem; text-transform: uppercase; letter-spacing: .05em; color: #6b736d; margin-bottom: 4px; }}
+    .label {{ font-size: .72rem; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 4px; }}
     .line {{ display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; padding: 2px 0; word-break: break-word; }}
     .line + .line {{ margin-top: 6px; }}
     .btns {{ display: flex; gap: 6px; }}
-    a {{ color: #1e6b3a; }}
-    .btn {{ display: inline-block; padding: 6px 12px; border-radius: 999px; border: 1px solid #1e6b3a; font-size: .85rem; text-decoration: none; white-space: nowrap; }}
-    .btn.wa {{ background: #1e6b3a; color: #fff; }}
+    a {{ color: var(--primary); }}
+    .btn {{ display: inline-block; padding: 6px 14px; border-radius: 10px; border: 1px solid var(--primary); font-size: .85rem; font-weight: 600; text-decoration: none; white-space: nowrap; }}
+    .btn.wa {{ background: var(--primary); color: #fff; }}
     .btn.map {{ margin-top: 10px; }}
   </style>
 </head>
 <body>
   <div class="card">
-    <header><h1>{title}</h1></header>
+    <header>{header}</header>
+    <div class="gold-line"></div>
     <div class="fields">
 {fields}
     </div>
