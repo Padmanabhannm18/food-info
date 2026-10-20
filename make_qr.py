@@ -45,11 +45,24 @@ def flatten(details):
     return flat
 
 
+def plain_value(value):
+    if isinstance(value, list):
+        return ", ".join(str(v) for v in value)
+    return str(value)
+
+
 def html_value(key, value):
+    if isinstance(value, list):
+        return "<br>".join(html_value(key, v) for v in value)
     text = html.escape(str(value))
-    if "phone" in key.lower() or "mobile" in key.lower():
-        return f'<a href="tel:{text.replace(" ", "")}">{text}</a>'
-    if "email" in key.lower():
+    key = key.lower()
+    if "phone" in key or "mobile" in key or "whatsapp" in key:
+        number = text.replace(" ", "")
+        out = f'<a href="tel:{number}">{text}</a>'
+        if "whatsapp" in key:
+            out += f' &middot; <a href="https://wa.me/{number.lstrip("+")}">WhatsApp</a>'
+        return out
+    if "email" in key:
         return f'<a href="mailto:{text}">{text}</a>'
     return text
 
@@ -110,7 +123,7 @@ def main():
         print(f"QR (link to {args.url}) saved to {args.out}")
         print(f"Upload {html_path} so it is served at that link.")
     else:
-        text = "\n".join(f"{k}: {v}" for k, v in details.items())
+        text = "\n".join(f"{k}: {plain_value(v)}" for k, v in details.items())
         make_qr(text, args.out)
         print(f"QR with details saved to {args.out}")
         print(text)
