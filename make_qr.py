@@ -31,7 +31,27 @@ HERE = Path(__file__).parent
 
 def load_details(path):
     with open(path, encoding="utf-8") as f:
-        return json.load(f)
+        return flatten(json.load(f))
+
+
+def flatten(details):
+    """Lift fields out of nested groups like "Contact": {"Phone": ...}."""
+    flat = {}
+    for k, v in details.items():
+        if isinstance(v, dict):
+            flat.update(flatten(v))
+        else:
+            flat[k] = v
+    return flat
+
+
+def html_value(key, value):
+    text = html.escape(str(value))
+    if "phone" in key.lower() or "mobile" in key.lower():
+        return f'<a href="tel:{text.replace(" ", "")}">{text}</a>'
+    if "email" in key.lower():
+        return f'<a href="mailto:{text}">{text}</a>'
+    return text
 
 
 def make_qr(data, out_path):
@@ -44,7 +64,7 @@ def make_qr(data, out_path):
 def write_html(details, out_path):
     title = html.escape(details.get("Business Name", "Business Details"))
     rows = "\n".join(
-        f"    <tr><th>{html.escape(k)}</th><td>{html.escape(str(v))}</td></tr>"
+        f"    <tr><th>{html.escape(k)}</th><td>{html_value(k, v)}</td></tr>"
         for k, v in details.items()
     )
     out_path.write_text(f"""<!doctype html>
