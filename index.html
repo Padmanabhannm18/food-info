@@ -5,24 +5,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Mamees Food Products</title>
   <style>
-    body { font-family: system-ui, sans-serif; background: #f5f5f0; margin: 0; padding: 24px 16px; color: #222; }
-    .card { max-width: 480px; margin: auto; background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,.08); }
-    h1 { font-size: 1.4rem; margin: 0 0 16px; }
-    table { width: 100%; border-collapse: collapse; }
-    th, td { text-align: left; padding: 10px 0; border-top: 1px solid #eee; vertical-align: top; }
-    th { width: 40%; color: #666; font-weight: 500; }
+    * { box-sizing: border-box; }
+    body { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; background: #f3f4f1; margin: 0; padding: 24px 16px; color: #1f2420; line-height: 1.45; }
+    .card { max-width: 460px; margin: auto; background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,.08); }
+    header { background: #1e6b3a; color: #fff; padding: 22px 20px; }
+    h1 { font-size: 1.35rem; margin: 0; }
+    .fields { padding: 4px 20px 12px; }
+    .field { padding: 14px 0; border-top: 1px solid #eceee9; }
+    .field:first-child { border-top: 0; }
+    .label { font-size: .75rem; text-transform: uppercase; letter-spacing: .05em; color: #6b736d; margin-bottom: 4px; }
+    .line { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; padding: 2px 0; word-break: break-word; }
+    .line + .line { margin-top: 6px; }
+    .btns { display: flex; gap: 6px; }
+    a { color: #1e6b3a; }
+    .btn { display: inline-block; padding: 6px 12px; border-radius: 999px; border: 1px solid #1e6b3a; font-size: .85rem; text-decoration: none; white-space: nowrap; }
+    .btn.wa { background: #1e6b3a; color: #fff; }
+    .btn.map { margin-top: 10px; }
   </style>
 </head>
 <body>
   <div class="card">
-  <h1>Mamees Food Products</h1>
-  <table>
-    <tr><th>Business Name</th><td>Mamees Food Products</td></tr>
-    <tr><th>Address</th><td>NGS 215, New Extension, Nurani Village, Palakkad - 678 004, Kerala</td></tr>
-    <tr><th>FSSAI No</th><td>21316213000419</td></tr>
-    <tr><th>Phone/WhatsApp</th><td><a href="tel:+919995334475">+919995334475</a> &middot; <a href="https://wa.me/919995334475">WhatsApp</a><br><a href="tel:+918848836913">+918848836913</a> &middot; <a href="https://wa.me/918848836913">WhatsApp</a></td></tr>
-    <tr><th>Email</th><td><a href="mailto:mameesfoodproducts@gmail.com">mameesfoodproducts@gmail.com</a></td></tr>
-  </table>
+    <header><h1>Mamees Food Products</h1></header>
+    <div class="fields">
+    <div class="field"><div class="label">Address</div><div class="line">NGS 215, New Extension, Nurani Village, Palakkad - 678 004, Kerala</div><a class="btn map" href="https://www.google.com/maps/search/?api=1&amp;query=NGS+215%2C+New+Extension%2C+Nurani+Village%2C+Palakkad+-+678+004%2C+Kerala">Open in Google Maps</a></div>
+    <div class="field"><div class="label">FSSAI No</div><div class="line">21316213000419</div></div>
+    <div class="field"><div class="label">Phone/WhatsApp</div><div class="line"><span>+919995334475</span><span class="btns"><a class="btn" href="tel:+919995334475">Call</a><a class="btn wa" href="https://wa.me/919995334475">WhatsApp</a></span></div>
+<div class="line"><span>+918848836913</span><span class="btns"><a class="btn" href="tel:+918848836913">Call</a><a class="btn wa" href="https://wa.me/918848836913">WhatsApp</a></span></div></div>
+    <div class="field"><div class="label">Email</div><div class="line"><a href="mailto:mameesfoodproducts@gmail.com">mameesfoodproducts@gmail.com</a></div></div>
+    </div>
   </div>
 </body>
 </html>
